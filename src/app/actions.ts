@@ -1,5 +1,10 @@
 'use server'
 
+export interface AdUnit {
+  id: string
+  type: string
+}
+
 export interface AdUnitDetail {
   client?: string
   slot?: string
@@ -14,35 +19,35 @@ export interface AmpAdUnitDetail {
 }
 
 export interface CheckResult {
+  urlChecked: string
+  error?: string
   ownershipVerified: boolean
   metaTagFound: boolean
   metaTagContent: string | null
+  adsTxtFound: boolean
+  adsTxtIsHtmlOrEmpty: boolean
+  adsTxtContent?: string | null
   adsbygoogleScriptFound: boolean
   pushScriptFound: boolean
-  adUnits: AdUnitDetail[]
-  adsTxtFound: boolean // True if ads.txt HTTP request was successful
-  adsTxtContent: string | null // Raw content of ads.txt
-  adsTxtIsHtmlOrEmpty: boolean // True if ads.txt is HTML or empty
   ampAdScriptFound: boolean
-  ampAdUnits: AmpAdUnitDetail[]
-  urlChecked: string
-  error?: string
+  adUnits: AdUnit[]
+  ampAdUnits: AdUnit[]
 }
 
 const initialServerLogicState: CheckResult = {
+  urlChecked: '',
+  error: undefined,
   ownershipVerified: false,
   metaTagFound: false,
   metaTagContent: null,
+  adsTxtFound: false,
+  adsTxtIsHtmlOrEmpty: false,
+  adsTxtContent: null,
   adsbygoogleScriptFound: false,
   pushScriptFound: false,
-  adUnits: [],
-  adsTxtFound: false,
-  adsTxtContent: null,
-  adsTxtIsHtmlOrEmpty: false,
   ampAdScriptFound: false,
-  ampAdUnits: [],
-  urlChecked: '',
-  error: undefined
+  adUnits: [],
+  ampAdUnits: []
 }
 
 export async function checkWebsiteAdSense(
@@ -121,7 +126,7 @@ export async function checkWebsiteAdSense(
       /\(\s*adsbygoogle\s*=\s*window\.adsbygoogle\s*\|\|\s*\[\s*\]\s*\)\.push\(\s*\{\s*\}\s*\)/i
     const currentPushScriptFound = pushScriptRegex.test(html)
 
-    const adUnits: AdUnitDetail[] = []
+    const adUnits: AdUnit[] = []
     const insTagRegex =
       /<ins\s[^>]*class=(?:"[^"]*\badsbygoogle\b[^"]*"|'[^']*\badsbygoogle\b[^']*')[^>]*>/gi
     let match
@@ -130,6 +135,8 @@ export async function checkWebsiteAdSense(
       const clientMatch = fullTagPreview.match(/data-ad-client="([^"]*)"/i)
       const slotMatch = fullTagPreview.match(/data-ad-slot="([^"]*)"/i)
       adUnits.push({
+        id: clientMatch ? clientMatch[1] : '',
+        type: slotMatch ? slotMatch[1] : '',
         client: clientMatch ? clientMatch[1] : undefined,
         slot: slotMatch ? slotMatch[1] : undefined,
         fullTagPreview: fullTagPreview
@@ -212,19 +219,19 @@ export async function checkWebsiteAdSense(
     }
 
     return {
+      urlChecked: targetUrl,
+      error: undefined,
       ownershipVerified: currentOwnershipVerified,
       metaTagFound: currentMetaTagFound,
       metaTagContent: currentMetaTagContent,
+      adsTxtFound: currentAdsTxtFound,
+      adsTxtIsHtmlOrEmpty: currentAdsTxtIsHtmlOrEmpty,
+      adsTxtContent: currentAdsTxtContent,
       adsbygoogleScriptFound: currentAdsbygoogleScriptFound,
       pushScriptFound: currentPushScriptFound,
-      adUnits,
-      adsTxtFound: currentAdsTxtFound,
-      adsTxtContent: currentAdsTxtContent,
-      adsTxtIsHtmlOrEmpty: currentAdsTxtIsHtmlOrEmpty,
       ampAdScriptFound: currentAmpAdScriptFound,
-      ampAdUnits: currentAmpAdUnits,
-      urlChecked: targetUrl,
-      error: undefined
+      adUnits,
+      ampAdUnits: currentAmpAdUnits
     }
   } catch (error: unknown) {
     const err = error as Error
