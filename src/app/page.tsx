@@ -11,8 +11,9 @@ import {
 import { Input } from '@/components/ui/input'
 import LandingView from '@/components/view/LandingView'
 import ResultView from '@/components/view/ResultView'
+import { CheckResult } from '@/types/result'
 import { useActionState } from 'react'
-import { checkWebsiteAdSense, type CheckResult } from './actions'
+import { checkWebsiteAdSense } from './actions'
 
 const initialState: CheckResult = {
   ownershipVerified: false,

@@ -1,8 +1,3 @@
-import type {
-  AmpAdUnitDetail,
-  CheckResult,
-  HtmlAdUnitDetail
-} from '@/app/actions'
 import AmpAdUnitItem from '@/components/AmpAdUnitItem'
 import HtmlAdUnitItem from '@/components/HtmlAdUnitItem'
 import ResultItem from '@/components/ResultItem'
@@ -15,6 +10,7 @@ import {
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { cn } from '@/lib/utils'
+import { AmpAdUnitDetail, CheckResult, HtmlAdUnitDetail } from '@/types/result'
 import {
   AlertTriangle,
   CheckCircle,
