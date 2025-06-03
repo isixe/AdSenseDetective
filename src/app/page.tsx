@@ -70,11 +70,13 @@ export default function AdsenseCheckerPage() {
           {!state.urlChecked && (
             <>
               <LandingView />
-              <ins
-                className="adsbygoogle"
-                data-ad-client="ca-pub-1891811866184778"
-                data-ad-slot="9684215023"
-              ></ins>
+              <div className="mt-8">
+                <ins
+                  className="adsbygoogle"
+                  data-ad-client="ca-pub-1891811866184778"
+                  data-ad-slot="9684215023"
+                ></ins>
+              </div>
             </>
           )}
 
