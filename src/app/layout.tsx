@@ -15,18 +15,20 @@ export async function generateMetadata(): Promise<Metadata> {
     metadataBase: new URL(url),
     title: 'AdSense Detective',
     keywords: 'AdSense Checker, AdSense Detective, AdSense Unit Checker',
-    description: 'Check websites for AdSense implementation details.',
+    description:
+      'A tool for checking whether a website has AdSense setup details.',
     alternates: {
       canonical: url
     },
     openGraph: {
       title: 'AdSense Detective',
-      description: 'Check websites for AdSense implementation details.',
+      description:
+        'A tool for checking whether a website has AdSense setup details.',
       url,
       siteName: 'AdSense Detective',
       locale: 'en',
       type: 'website',
-      images: ''
+      images: '/preview.png'
     }
   }
 }
