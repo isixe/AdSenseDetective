@@ -65,7 +65,7 @@ export default function ResultView({
               </h4>
               <div
                 className={cn(
-                  'flex items-center rounded-full px-2 py-1 text-xs font-semibold',
+                  'flex min-w-[105px] items-center rounded-full px-2 py-1 text-xs font-semibold',
                   state.ownershipVerified
                     ? 'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-400'
                     : 'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-400'
@@ -99,7 +99,7 @@ export default function ResultView({
                       <CheckCircle className="mr-1 h-3 w-3" /> Found
                     </span>
                   ) : (
-                    <span className="flex items-center rounded-full bg-red-100 px-1.5 py-0.5 text-xs text-red-600 dark:bg-red-900/40 dark:text-red-400">
+                    <span className="flex min-w-[95px] items-center rounded-full bg-red-100 px-1.5 py-0.5 text-xs text-red-600 dark:bg-red-900/40 dark:text-red-400">
                       <XCircle className="mr-1 h-3 w-3" /> Not Found
                     </span>
                   )}
@@ -249,7 +249,7 @@ export default function ResultView({
                       <CheckCircle className="mr-1 h-3 w-3" /> Found
                     </span>
                   ) : (
-                    <span className="flex items-center rounded-full bg-red-100 px-1.5 py-0.5 text-xs text-red-600 dark:bg-red-900/40 dark:text-red-400">
+                    <span className="flex min-w-[95px] items-center rounded-full bg-red-100 px-1.5 py-0.5 text-xs text-red-600 dark:bg-red-900/40 dark:text-red-400">
                       <XCircle className="mr-1 h-3 w-3" /> Not Found
                     </span>
                   )}
@@ -277,14 +277,7 @@ export default function ResultView({
             </h4>
             <Tabs defaultValue={adUnitTabDefaultValue} className="w-full">
               <TabsList className="grid w-full grid-cols-2 bg-gray-200 dark:bg-gray-700">
-                <TabsTrigger
-                  value="html"
-                  className={cn(
-                    'data-[state=active]:shadow-sm',
-                    state.pushScriptFound &&
-                      'data-[state=active]:bg-green-50 data-[state=active]:text-green-700 dark:data-[state=active]:bg-green-900/30 dark:data-[state=active]:text-green-400'
-                  )}
-                >
+                <TabsTrigger value="html">
                   HTML
                   {state.pushScriptFound && (
                     <span className="ml-1.5 inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700 dark:bg-green-700/20 dark:text-green-400">
@@ -293,14 +286,7 @@ export default function ResultView({
                     </span>
                   )}
                 </TabsTrigger>
-                <TabsTrigger
-                  value="amp"
-                  className={cn(
-                    'data-[state=active]:shadow-sm',
-                    state.ampAdScriptFound &&
-                      'data-[state=active]:bg-green-50 data-[state=active]:text-green-700 dark:data-[state=active]:bg-green-900/30 dark:data-[state=active]:text-green-400'
-                  )}
-                >
+                <TabsTrigger value="amp">
                   AMP
                   {state.ampAdScriptFound && (
                     <span className="ml-1.5 inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700 dark:bg-green-700/20 dark:text-green-400">

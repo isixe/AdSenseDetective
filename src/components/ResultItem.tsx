@@ -30,7 +30,7 @@ export default function ResultItem({
             <CheckCircle className="mr-1 h-3 w-3" /> Found
           </span>
         ) : (
-          <span className="flex items-center rounded-full bg-red-100 px-1.5 py-0.5 text-xs text-red-600 dark:bg-red-900/40 dark:text-red-400">
+          <span className="flex min-w-[95px] items-center rounded-full bg-red-100 px-1.5 py-0.5 text-xs text-red-600 dark:bg-red-900/40 dark:text-red-400">
             <XCircle className="mr-1 h-3 w-3" /> Not Found
           </span>
         )}
