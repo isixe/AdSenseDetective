@@ -1,4 +1,5 @@
-import { Github, SearchCode } from 'lucide-react'
+import { Github } from 'lucide-react'
+import Image from 'next/image'
 import Link from 'next/link'
 
 export function Header() {
@@ -9,11 +10,16 @@ export function Header() {
           href="/"
           className="flex items-center gap-2 text-lg font-semibold text-primary"
         >
-          <SearchCode className="h-6 w-6" />
+          <Image
+            src="/favicon.svg"
+            alt="AdSense Detective"
+            width={35}
+            height={35}
+          />
           <span>AdSense Detective</span>
         </Link>
         <a
-          href="https://github.com/firebase/studio-app-hosting-example-adsense-detective"
+          href="https://github.com/isixe/adsense-detective"
           target="_blank"
           rel="noopener noreferrer"
           aria-label="GitHub Repository"

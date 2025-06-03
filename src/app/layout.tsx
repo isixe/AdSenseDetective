@@ -3,10 +3,32 @@ import { Header } from '@/components/layout/header'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import '@/styles/globals.css'
 import type { Metadata } from 'next'
+import { headers } from 'next/headers'
 
-export const metadata: Metadata = {
-  title: 'AdSense Detective',
-  description: 'Check websites for AdSense implementation details.'
+export async function generateMetadata(): Promise<Metadata> {
+  const headersList = await headers()
+  const protocol = headersList.get('x-forwarded-proto')
+  const host = headersList.get('host')
+  const url = `${protocol}://${host}`
+
+  return {
+    metadataBase: new URL(url),
+    title: 'AdSense Detective',
+    keywords: 'AdSense Checker, AdSense Detective, AdSense Unit Checker',
+    description: 'Check websites for AdSense implementation details.',
+    alternates: {
+      canonical: url
+    },
+    openGraph: {
+      title: 'AdSense Detective',
+      description: 'Check websites for AdSense implementation details.',
+      url,
+      siteName: 'AdSense Detective',
+      locale: 'en',
+      type: 'website',
+      images: ''
+    }
+  }
 }
 
 export default function RootLayout({
