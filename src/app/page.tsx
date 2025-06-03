@@ -20,11 +20,11 @@ const initialState: CheckResult = {
   metaTagContent: null,
   adsbygoogleScriptFound: false,
   pushScriptFound: false,
-  adUnits: [],
   adsTxtFound: false,
   adsTxtContent: null,
   adsTxtIsHtmlOrEmpty: false,
   ampAdScriptFound: false,
+  htmlAdUnits: [],
   ampAdUnits: [],
   urlChecked: '',
   error: undefined
