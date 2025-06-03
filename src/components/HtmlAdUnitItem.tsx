@@ -1,4 +1,4 @@
-import { AdUnitDetail } from '@/app/actions'
+import { HtmlAdUnitDetail } from '@/app/actions'
 import {
   Accordion,
   AccordionContent,
@@ -7,7 +7,7 @@ import {
 } from './ui/accordion'
 
 interface HtmlAdUnitItemProps {
-  unit: AdUnitDetail
+  unit: HtmlAdUnitDetail
   index: number
 }
 

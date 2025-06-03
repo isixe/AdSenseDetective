@@ -1,11 +1,6 @@
 'use server'
 
-export interface AdUnit {
-  id: string
-  type: string
-}
-
-export interface AdUnitDetail {
+export interface HtmlAdUnitDetail {
   client?: string
   slot?: string
   fullTagPreview: string
@@ -30,8 +25,8 @@ export interface CheckResult {
   adsbygoogleScriptFound: boolean
   pushScriptFound: boolean
   ampAdScriptFound: boolean
-  adUnits: AdUnit[]
-  ampAdUnits: AdUnit[]
+  htmlAdUnits: HtmlAdUnitDetail[]
+  ampAdUnits: AmpAdUnitDetail[]
 }
 
 const initialServerLogicState: CheckResult = {
@@ -46,7 +41,7 @@ const initialServerLogicState: CheckResult = {
   adsbygoogleScriptFound: false,
   pushScriptFound: false,
   ampAdScriptFound: false,
-  adUnits: [],
+  htmlAdUnits: [],
   ampAdUnits: []
 }
 
@@ -126,7 +121,7 @@ export async function checkWebsiteAdSense(
       /\(\s*adsbygoogle\s*=\s*window\.adsbygoogle\s*\|\|\s*\[\s*\]\s*\)\.push\(\s*\{\s*\}\s*\)/i
     const currentPushScriptFound = pushScriptRegex.test(html)
 
-    const adUnits: AdUnit[] = []
+    const htmlAdUnits: HtmlAdUnitDetail[] = []
     const insTagRegex =
       /<ins\s[^>]*class=(?:"[^"]*\badsbygoogle\b[^"]*"|'[^']*\badsbygoogle\b[^']*')[^>]*>/gi
     let match
@@ -134,9 +129,7 @@ export async function checkWebsiteAdSense(
       const fullTagPreview = match[0]
       const clientMatch = fullTagPreview.match(/data-ad-client="([^"]*)"/i)
       const slotMatch = fullTagPreview.match(/data-ad-slot="([^"]*)"/i)
-      adUnits.push({
-        id: clientMatch ? clientMatch[1] : '',
-        type: slotMatch ? slotMatch[1] : '',
+      htmlAdUnits.push({
         client: clientMatch ? clientMatch[1] : undefined,
         slot: slotMatch ? slotMatch[1] : undefined,
         fullTagPreview: fullTagPreview
@@ -230,7 +223,7 @@ export async function checkWebsiteAdSense(
       adsbygoogleScriptFound: currentAdsbygoogleScriptFound,
       pushScriptFound: currentPushScriptFound,
       ampAdScriptFound: currentAmpAdScriptFound,
-      adUnits,
+      htmlAdUnits: htmlAdUnits,
       ampAdUnits: currentAmpAdUnits
     }
   } catch (error: unknown) {

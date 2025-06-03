@@ -1,4 +1,8 @@
-import type { CheckResult } from '@/app/actions'
+import type {
+  AmpAdUnitDetail,
+  CheckResult,
+  HtmlAdUnitDetail
+} from '@/app/actions'
 import AmpAdUnitItem from '@/components/AmpAdUnitItem'
 import HtmlAdUnitItem from '@/components/HtmlAdUnitItem'
 import ResultItem from '@/components/ResultItem'
@@ -327,15 +331,17 @@ export default function ResultView({
                       </code>{' '}
                       tags
                     </h5>
-                    {state.adUnits.length > 0 ? (
+                    {state.htmlAdUnits.length > 0 ? (
                       <div className="space-y-3">
-                        {state.adUnits.map((unit: any, index: number) => (
-                          <HtmlAdUnitItem
-                            key={index}
-                            unit={unit}
-                            index={index}
-                          />
-                        ))}
+                        {state.htmlAdUnits.map(
+                          (unit: HtmlAdUnitDetail, index: number) => (
+                            <HtmlAdUnitItem
+                              key={index}
+                              unit={unit}
+                              index={index}
+                            />
+                          )
+                        )}
                       </div>
                     ) : (
                       <div className="flex items-center rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-700 shadow-sm dark:border-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
@@ -372,13 +378,15 @@ export default function ResultView({
                     </h5>
                     {state.ampAdUnits.length > 0 ? (
                       <div className="space-y-3">
-                        {state.ampAdUnits.map((unit: any, index: number) => (
-                          <AmpAdUnitItem
-                            key={index}
-                            unit={unit}
-                            index={index}
-                          />
-                        ))}
+                        {state.ampAdUnits.map(
+                          (unit: AmpAdUnitDetail, index: number) => (
+                            <AmpAdUnitItem
+                              key={index}
+                              unit={unit}
+                              index={index}
+                            />
+                          )
+                        )}
                       </div>
                     ) : (
                       <div className="flex items-center rounded-md border border-amber-200 bg-amber-50 p-3 text-sm text-amber-700 shadow-sm dark:border-amber-700 dark:bg-amber-900/30 dark:text-amber-400">
