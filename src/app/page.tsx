@@ -66,7 +66,16 @@ export default function AdsenseCheckerPage() {
           </form>
 
           {/* Feature Cards Section - shows only if no URL checked */}
-          {!state.urlChecked && <LandingView />}
+          {!state.urlChecked && (
+            <>
+              <LandingView />
+              <ins
+                className="adsbygoogle"
+                data-ad-client="ca-pub-1891811866184778"
+                data-ad-slot="9684215023"
+              ></ins>
+            </>
+          )}
 
           {state?.urlChecked && (
             <ResultView
