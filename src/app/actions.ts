@@ -1,33 +1,6 @@
 'use server'
 
-export interface HtmlAdUnitDetail {
-  client?: string
-  slot?: string
-  fullTagPreview: string
-}
-
-export interface AmpAdUnitDetail {
-  typeAttr?: string
-  client?: string
-  slot?: string
-  fullTagPreview: string
-}
-
-export interface CheckResult {
-  urlChecked: string
-  error?: string
-  ownershipVerified: boolean
-  metaTagFound: boolean
-  metaTagContent: string | null
-  adsTxtFound: boolean
-  adsTxtIsHtmlOrEmpty: boolean
-  adsTxtContent?: string | null
-  adsbygoogleScriptFound: boolean
-  pushScriptFound: boolean
-  ampAdScriptFound: boolean
-  htmlAdUnits: HtmlAdUnitDetail[]
-  ampAdUnits: AmpAdUnitDetail[]
-}
+import { AmpAdUnitDetail, CheckResult, HtmlAdUnitDetail } from '@/types/result'
 
 const initialServerLogicState: CheckResult = {
   urlChecked: '',
@@ -43,6 +16,25 @@ const initialServerLogicState: CheckResult = {
   ampAdScriptFound: false,
   htmlAdUnits: [],
   ampAdUnits: []
+}
+
+const REGEX = {
+  metaTag:
+    /<meta\s[^>]*name=(?:"google-adsense-account"|'google-adsense-account')[^>]*content=(?:"([^"]*)"|'([^']*)')[^>]*>/i,
+
+  adsScript:
+    /<script\s[^>]*src=[^>]*pagead2\.googlesyndication\.com\/pagead\/js\/adsbygoogle\.js\?client=([^"'>\s&]+)[^>]*><\/script>/i,
+
+  pushScript:
+    /\(\s*adsbygoogle\s*=\s*window\.adsbygoogle\s*\|\|\s*\[\s*\]\s*\)\.push\(\s*\{\s*\}\s*\)/i,
+
+  insTag:
+    /<ins\s[^>]*class=(?:"[^"]*\badsbygoogle\b[^"]*"|'[^']*\badsbygoogle\b[^']*')[^>]*>/gi,
+
+  ampAdScript:
+    /<script\s[^>]*custom-element="amp-ad"[^>]*src="https[^"]*cdn\.ampproject\.org\/v0\/amp-ad-0\.1\.js"[^>]*><\/script>/i,
+
+  ampAdTag: /<amp-ad\s((?:.|\n)*?)<\/amp-ad>/gi
 }
 
 export async function checkWebsiteAdSense(
@@ -86,8 +78,6 @@ export async function checkWebsiteAdSense(
   try {
     const response = await fetch(targetUrl, {
       headers: {
-        'User-Agent':
-          'AdSenseDetectiveBot/1.0 (+https://yourdomain.com/bot-info)',
         Accept: 'text/html'
       }
     })
@@ -103,36 +93,32 @@ export async function checkWebsiteAdSense(
     const html = await response.text()
 
     // Meta Tag Detection
-    const metaTagRegex =
-      /<meta\s[^>]*name=(?:"google-adsense-account"|'google-adsense-account')[^>]*content=(?:"([^"]*)"|'([^']*)')[^>]*>/i
-    const metaTagMatch = html.match(metaTagRegex)
+    const metaTagMatch = html.match(REGEX.metaTag)
     const currentMetaTagFound = !!metaTagMatch
     const currentMetaTagContent = metaTagMatch
       ? metaTagMatch[1] || metaTagMatch[2] || null
       : null
 
     // AdSense Script Detection (adsbygoogle.js?client=...)
-    const adsScriptRegex =
-      /<script\s[^>]*src=[^>]*pagead2\.googlesyndication\.com\/pagead\/js\/adsbygoogle\.js\?client=([^"'>\s&]+)[^>]*><\/script>/i
-    const currentAdsbygoogleScriptFound = adsScriptRegex.test(html)
+    const currentAdsbygoogleScriptFound = REGEX.adsScript.test(html)
 
     // Push Script Detection
-    const pushScriptRegex =
-      /\(\s*adsbygoogle\s*=\s*window\.adsbygoogle\s*\|\|\s*\[\s*\]\s*\)\.push\(\s*\{\s*\}\s*\)/i
-    const currentPushScriptFound = pushScriptRegex.test(html)
+    const currentPushScriptFound = REGEX.pushScript.test(html)
 
     const htmlAdUnits: HtmlAdUnitDetail[] = []
-    const insTagRegex =
-      /<ins\s[^>]*class=(?:"[^"]*\badsbygoogle\b[^"]*"|'[^']*\badsbygoogle\b[^']*')[^>]*>/gi
     let match
-    while ((match = insTagRegex.exec(html)) !== null) {
-      const fullTagPreview = match[0]
-      const clientMatch = fullTagPreview.match(/data-ad-client="([^"]*)"/i)
-      const slotMatch = fullTagPreview.match(/data-ad-slot="([^"]*)"/i)
+    while ((match = REGEX.insTag.exec(html)) !== null) {
+      let fullTagPreview = match[0]
+      // Tag preview format
+      fullTagPreview = fullTagPreview.replace(
+        /^<ins\s+class="adsbygoogle"/i,
+        '<ins class="adsbygoogle"\n'
+      )
+      fullTagPreview = fullTagPreview.replace(/\s+([a-zA-Z\-]+)=/g, '\n    $1=')
       htmlAdUnits.push({
-        client: clientMatch ? clientMatch[1] : undefined,
-        slot: slotMatch ? slotMatch[1] : undefined,
-        fullTagPreview: fullTagPreview
+        client: fullTagPreview.match(/data-ad-client="([^"]*)"/i)?.[1],
+        slot: fullTagPreview.match(/data-ad-slot="([^"]*)"/i)?.[1],
+        fullTagPreview
       })
     }
 
@@ -145,12 +131,7 @@ export async function checkWebsiteAdSense(
     try {
       const adsTxtUrlObject = new URL('/ads.txt', targetUrl)
       const adsTxtUrl = adsTxtUrlObject.href
-      const adsTxtResponse = await fetch(adsTxtUrl, {
-        headers: {
-          'User-Agent':
-            'AdSenseDetectiveBot/1.0 (+https://yourdomain.com/bot-info)'
-        }
-      })
+      const adsTxtResponse = await fetch(adsTxtUrl)
 
       currentAdsTxtFound = adsTxtResponse.ok
 
@@ -181,15 +162,12 @@ export async function checkWebsiteAdSense(
       currentAdsbygoogleScriptFound
 
     // AMP Ad Script Detection
-    const ampAdScriptRegex =
-      /<script\s[^>]*custom-element="amp-ad"[^>]*src="https[^"]*cdn\.ampproject\.org\/v0\/amp-ad-0\.1\.js"[^>]*><\/script>/i
-    const currentAmpAdScriptFound = ampAdScriptRegex.test(html)
+    const currentAmpAdScriptFound = REGEX.ampAdScript.test(html)
 
     // AMP Ad Unit Detection
     const currentAmpAdUnits: AmpAdUnitDetail[] = []
-    const ampAdTagRegex = /<amp-ad\s((?:.|\n)*?)<\/amp-ad>/gi
     let ampMatch
-    while ((ampMatch = ampAdTagRegex.exec(html)) !== null) {
+    while ((ampMatch = REGEX.ampAdTag.exec(html)) !== null) {
       const fullTagPreview = ampMatch[0]
       const attributesString = ampMatch[1]
 

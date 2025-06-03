@@ -1,4 +1,4 @@
-import { HtmlAdUnitDetail } from '@/app/actions'
+import { HtmlAdUnitDetail } from '@/types/result'
 import {
   Accordion,
   AccordionContent,

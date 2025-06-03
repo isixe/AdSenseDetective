@@ -1,4 +1,4 @@
-import { AmpAdUnitDetail } from '@/app/actions'
+import { AmpAdUnitDetail } from '@/types/result'
 import {
   Accordion,
   AccordionContent,
