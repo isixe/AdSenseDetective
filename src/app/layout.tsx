@@ -1,5 +1,6 @@
 import { Footer } from '@/components/layout/footer'
 import { Header } from '@/components/layout/header'
+import Analytics from '@/components/service/analytics'
 import { TooltipProvider } from '@/components/ui/tooltip'
 import '@/styles/globals.css'
 import type { Metadata } from 'next'
@@ -46,6 +47,7 @@ export default function RootLayout({
           <TooltipProvider>{children}</TooltipProvider>
         </main>
         <Footer />
+        <Analytics />
       </body>
     </html>
   )
