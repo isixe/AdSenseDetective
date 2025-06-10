@@ -23,8 +23,8 @@ export default function LandingView() {
               </span>
             </h2>
             <p className="mx-auto max-w-xl text-lg text-gray-600">
-              Everything you need to optimize your AdSense performance and
-              maximize revenue
+              Everything you need to maximize your AdSense revenue with accurate
+              and efficient tools
             </p>
           </div>
 
