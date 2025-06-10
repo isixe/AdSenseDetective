@@ -13,11 +13,17 @@ export default function LandingView() {
   return (
     <>
       <div className="py-20">
-        <div className="mx-auto max-w-6xl px-6">
+        <div className="mx-auto max-w-6xl px-2">
           <div className="mb-16 text-center">
-            <h2 className="mb-4 text-3xl font-bold text-gray-900">
+            <h2 className="mb-4 text-2xl font-bold text-gray-900 md:text-3xl">
               Powerful Features for
-              <span className="bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent">
+              <span
+                className="bg-gradient-to-r from-emerald-600 to-blue-600 bg-clip-text text-transparent"
+                style={{
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent'
+                }}
+              >
                 {' '}
                 AdSense Success
               </span>
@@ -101,7 +107,7 @@ export default function LandingView() {
       <div className="py-5">
         <div className="max-w-6xlx mx-auto">
           <div className="mb-16 text-center">
-            <h2 className="mb-4 text-3xl font-bold text-gray-900">
+            <h2 className="mb-4 text-2xl font-bold text-gray-900 md:text-3xl">
               Trusted by Publishers Worldwide
             </h2>
             <p className="text-lg text-gray-600">
