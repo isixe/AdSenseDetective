@@ -4,11 +4,12 @@ AdSense Detective is a tool designed to help you quickly analyze any website for
 
 ## Key Features
 
-- **Verify Setup:**  
+- **Verify Setup:**
+
   - Checks for AdSense verification meta tags, `ads.txt` files, and core AdSense script implementations.
   - Ensures proper ownership and validates eligibility for ad serving.
 
-- **Detect Ad Slots:**  
+- **Detect Ad Slots:**
   - Identifies all HTML and AMP ad units on a web page.
   - Details each ad unit's client and slot IDs for quick verification.
 
@@ -19,6 +20,7 @@ AdSense Detective is a tool designed to help you quickly analyze any website for
 
 2. **Check Website:**  
    The tool inspects the website for:
+
    - AdSense ownership verification tags.
    - Presence of `ads.txt` files.
    - Google AdSense core scripts.
