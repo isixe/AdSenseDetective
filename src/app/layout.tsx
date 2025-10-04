@@ -6,6 +6,8 @@ import '@/styles/globals.css'
 import type { Metadata } from 'next'
 import { headers } from 'next/headers'
 
+export const runtime = 'edge'
+
 export async function generateMetadata(): Promise<Metadata> {
   const headersList = await headers()
   const protocol = headersList.get('x-forwarded-proto')
