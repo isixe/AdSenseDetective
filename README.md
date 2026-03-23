@@ -98,4 +98,4 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 ## License
 
-MIT License - see [LICENSE](LICENSE) for details.
+This project is licensed under the [MIT License](LICENSE).
