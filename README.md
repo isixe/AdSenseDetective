@@ -1,19 +1,33 @@
 # AdSense Detective
 
-AdSense Detective is a tool designed to help you quickly analyze any website for Google AdSense ownership verification, script implementation, and ad unit detection (both HTML and AMP).
+<p align="center">
+  <img src="https://raw.githubusercontent.com/isixe/AdSenseDetective/refs/heads/main/public/favicon.ico" alt="AdSense Detective" width="100" />
+</p>
 
-## Key Features
+<p align="center">
+ A professional tool for analyzing websites for Google AdSense ownership verification, script implementation, and ad unit detection.
+</p>
 
-- **Verify Setup:**
+## Overview
 
-  - Checks for AdSense verification meta tags, `ads.txt` files, and core AdSense script implementations.
-  - Ensures proper ownership and validates eligibility for ad serving.
+AdSense Detective helps you quickly audit any website to verify AdSense integration. It checks for ownership verification, detects ad slots, and provides detailed reports on ad implementation.
 
-- **Detect Ad Slots:**
-  - Identifies all HTML and AMP ad units on a web page.
-  - Details each ad unit's client and slot IDs for quick verification.
+## Features
 
-## How It Works
+- AdSense verification meta tags detection
+- ads.txt file presence and validity
+- Core AdSense script implementation checks
+- Ownership verification status
+
+## Tech Stack
+
+- **Framework**: Next.js 15.3
+- **UI Components**: Shadcn-ui
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Icons**: Lucide React
+
+## Usage
 
 1. **Enter a Website URL:**  
    Input the URL of the website you wish to analyze (e.g., `https://example.com`).
@@ -33,29 +47,55 @@ AdSense Detective is a tool designed to help you quickly analyze any website for
 
 ## Installation
 
-Clone the repository:
+1. Clone the repository:
 
-```bash
-git clone https://github.com/isixe/adsense-detective.git
-cd adsense-detective
-```
+   ```sh
+   git clone https://github.com/isixe/adsense-detective.git
+   ```
 
-Install dependencies:
+2. Navigate to the project directory:
 
-```bash
-pnpm install
-```
+   ```sh
+   cd adsense-detective
+   ```
+
+3. Install dependencies:
+
+   ```sh
+   pnpm install
+   ```
 
 ## Usage
 
-Start the application (adjust for your framework/environment):
+Start the development server:
 
-```bash
+```sh
 pnpm dev
 ```
 
-Then open the interface and enter the website URL you want to check.
+Open [http://localhost:3000](http://localhost:3000) in your browser.
+
+## Project Structure
+
+```
+├── src/
+│   ├── app/              # Next.js app router pages
+│   │   ├── page.tsx      # Main landing page
+│   │   ├── layout.tsx    # Root layout
+│   │   └── actions.ts   # Server actions
+│   ├── components/       # React components
+│   │   ├── ui/          # Reusable UI components
+│   │   ├── view/        # Page view components
+│   │   └── layout/      # Layout components
+│   ├── lib/             # Utility functions
+│   ├── styles/          # Global styles
+│   └── types/           # TypeScript definitions
+├── public/              # Static assets
+├── next.config.ts       # Next.js configuration
+├── tailwind.config.ts   # Tailwind configuration
+└── package.json         # Dependencies
+```
 
 ## License
 
-This project is licensed under the MIT License.
+MIT License - see [LICENSE](LICENSE) for details.
