@@ -43,6 +43,16 @@ export default function AdsenseCheckerPage() {
 
   return (
     <div className="flex flex-col items-center">
+      <div className="mb-8 mt-4">
+        <ins
+          className="adsbygoogle"
+          data-ad-client="ca-pub-1891811866184778"
+          data-ad-slot="9684215023"
+          data-ad-format="auto"
+          data-full-width-responsive="true"
+        ></ins>
+      </div>
+
       <Card className="w-full max-w-5xl rounded-none border-0 bg-transparent shadow-none">
         <CardHeader className="p-4">
           <CardDescription className="text-center">
@@ -50,6 +60,7 @@ export default function AdsenseCheckerPage() {
             scripts, and ad units (HTML &amp; AMP).
           </CardDescription>
         </CardHeader>
+
         <CardContent className="px-4 pb-6 pt-0">
           <form action={formAction} className="space-y-6">
             <div className="mx-auto max-w-2xl">
@@ -70,13 +81,6 @@ export default function AdsenseCheckerPage() {
           {!state.urlChecked && (
             <>
               <LandingView />
-              <div className="mt-8">
-                <ins
-                  className="adsbygoogle"
-                  data-ad-client="ca-pub-1891811866184778"
-                  data-ad-slot="9684215023"
-                ></ins>
-              </div>
             </>
           )}
 
