@@ -45,7 +45,7 @@ export default function AdsenseCheckerPage() {
     <div className="flex flex-col items-center">
       <div className="mb-8 mt-4">
         <ins
-          className="adsbygoogle"
+          className="adsbygoogle block"
           data-ad-client="ca-pub-1891811866184778"
           data-ad-slot="9684215023"
           data-ad-format="auto"
