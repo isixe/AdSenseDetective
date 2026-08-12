@@ -51,6 +51,11 @@ export default function AdsenseCheckerPage() {
           data-ad-format="auto"
           data-full-width-responsive="true"
         ></ins>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(adsbygoogle = window.adsbygoogle || []).push({});`
+          }}
+        />
       </div>
 
       <Card className="w-full max-w-5xl rounded-none border-0 bg-transparent shadow-none">
