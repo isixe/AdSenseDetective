@@ -1,6 +1,7 @@
 'use client'
 
 import FormSubmitButton from '@/components/FormSubmitButton'
+import Adsense from '@/components/service/adsense'
 import {
   Card,
   CardContent,
@@ -43,20 +44,7 @@ export default function AdsenseCheckerPage() {
 
   return (
     <div className="flex flex-col items-center">
-      <div className="mb-8 mt-4">
-        <ins
-          className="adsbygoogle block"
-          data-ad-client="ca-pub-1891811866184778"
-          data-ad-slot="9684215023"
-          data-ad-format="auto"
-          data-full-width-responsive="true"
-        ></ins>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(adsbygoogle = window.adsbygoogle || []).push({});`
-          }}
-        />
-      </div>
+      <Adsense />
 
       <Card className="w-full max-w-5xl rounded-none border-0 bg-transparent shadow-none">
         <CardHeader className="p-4">
