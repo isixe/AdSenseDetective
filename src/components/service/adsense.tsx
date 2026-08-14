@@ -17,7 +17,7 @@ export default function Adsense() {
 
   return (
     <>
-      <div className="mb-8 mt-4 w-full">
+      <div className="mt-12 w-full">
         <ins
           className="adsbygoogle block"
           data-ad-client="ca-pub-1891811866184778"
