@@ -68,11 +68,10 @@ export default function AdsenseCheckerPage() {
             <FormSubmitButton />
           </form>
 
-          <Adsense />
-
           {/* Feature Cards Section - shows only if no URL checked */}
           {!state.urlChecked && (
             <>
+              <Adsense />
               <LandingView />
             </>
           )}
