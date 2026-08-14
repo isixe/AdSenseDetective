@@ -44,8 +44,6 @@ export default function AdsenseCheckerPage() {
 
   return (
     <div className="flex flex-col items-center">
-      <Adsense />
-
       <Card className="w-full max-w-5xl rounded-none border-0 bg-transparent shadow-none">
         <CardHeader className="p-4">
           <CardDescription className="text-center">
@@ -69,6 +67,8 @@ export default function AdsenseCheckerPage() {
             </div>
             <FormSubmitButton />
           </form>
+
+          <Adsense />
 
           {/* Feature Cards Section - shows only if no URL checked */}
           {!state.urlChecked && (
