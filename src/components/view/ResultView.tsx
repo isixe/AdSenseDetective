@@ -275,7 +275,7 @@ export default function ResultView({
               <TabsList className="grid w-full grid-cols-2 bg-gray-200 dark:bg-gray-700">
                 <TabsTrigger value="html">
                   HTML
-                  {state.pushScriptFound && (
+                  {state.pushScriptFound && state.pushScriptInBody && (
                     <span className="ml-1.5 inline-flex items-center gap-1 rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700 dark:bg-green-700/20 dark:text-green-400">
                       <CheckCircle className="h-3 w-3" />
                       Verified
@@ -304,6 +304,21 @@ export default function ResultView({
                         : 'The script for initializing ad requests (e.g., (adsbygoogle = window.adsbygoogle || []).push({})) was not found. HTML ad units may not display without this.'
                     }
                   />
+
+                  {state.pushScriptFound && !state.pushScriptInBody && (
+                    <Alert
+                      variant="default"
+                      className="border-amber-200 bg-amber-50 p-3 text-xs text-amber-700 shadow-sm dark:border-amber-700 dark:bg-amber-900/30 dark:text-amber-400"
+                    >
+                      <AlertTriangle className="h-4 w-4 text-amber-500 dark:text-amber-400" />
+                      <AlertDescription className="ml-1">
+                        The push script was found, but it is not located inside
+                        the &lt;body&gt; tag (or no &lt;body&gt; tag was
+                        detected). The push script must be placed inside the
+                        &lt;body&gt; for HTML ad units to display.
+                      </AlertDescription>
+                    </Alert>
+                  )}
 
                   <div className="border-t border-dashed border-slate-300 pt-3 dark:border-slate-700">
                     <h5 className="mb-2 mt-2 flex items-center text-sm font-medium text-slate-600 dark:text-slate-300">

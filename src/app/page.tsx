@@ -22,6 +22,7 @@ const initialState: CheckResult = {
   metaTagContent: null,
   adsbygoogleScriptFound: false,
   pushScriptFound: false,
+  pushScriptInBody: false,
   adsTxtFound: false,
   adsTxtContent: null,
   adsTxtIsHtmlOrEmpty: false,

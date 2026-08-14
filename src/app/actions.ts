@@ -1,5 +1,6 @@
 'use server'
 
+import { HTMLElement, parse } from 'node-html-parser'
 import { AmpAdUnitDetail, CheckResult, HtmlAdUnitDetail } from '@/types/result'
 
 const initialServerLogicState: CheckResult = {
@@ -13,6 +14,7 @@ const initialServerLogicState: CheckResult = {
   adsTxtContent: null,
   adsbygoogleScriptFound: false,
   pushScriptFound: false,
+  pushScriptInBody: false,
   ampAdScriptFound: false,
   htmlAdUnits: [],
   ampAdUnits: []
@@ -28,13 +30,61 @@ const REGEX = {
   pushScript:
     /\(\s*adsbygoogle\s*=\s*window\.adsbygoogle\s*\|\|\s*\[\s*\]\s*\)\.push\(\s*\{\s*\}\s*\)/i,
 
-  insTag:
-    /<ins\s[^>]*class=(?:"[^"]*\badsbygoogle\b[^"]*"|'[^']*\badsbygoogle\b[^']*')[^>]*>/gi,
-
   ampAdScript:
     /<script\s[^>]*custom-element="amp-ad"[^>]*src="https[^"]*cdn\.ampproject\.org\/v0\/amp-ad-0\.1\.js"[^>]*><\/script>/i,
 
   ampAdTag: /<amp-ad\s((?:.|\n)*?)<\/amp-ad>/gi
+}
+
+const ZERO_SIZE_PATTERN =
+  /^0(?:\.0+)?(?:px|em|rem|%|vh|vw|vmin|vmax|pt|pc|mm|cm|in|ex|ch|q)?$/i
+
+// Detects explicit zero width/height (inline style wins over attributes)
+function getZeroSizeInfo(el: HTMLElement): string | null {  const style = el.attributes['style']
+  if (style) {
+    for (const decl of style.split(';')) {
+      const colonIndex = decl.indexOf(':')
+      if (colonIndex === -1) continue
+      const prop = decl.slice(0, colonIndex).trim().toLowerCase()
+      const value = decl.slice(colonIndex + 1).trim().toLowerCase()
+      if (
+        (prop === 'width' || prop === 'height') &&
+        ZERO_SIZE_PATTERN.test(value)
+      ) {
+        return `${prop}: ${value}`
+      }
+    }
+  }
+
+  for (const attr of ['width', 'height']) {
+    const value = el.attributes[attr]
+    if (value && ZERO_SIZE_PATTERN.test(value.trim().toLowerCase())) {
+      return `${attr}: ${value.trim()}`
+    }
+  }
+
+  return null
+}
+
+// Walks ancestors (excluding body/html); falls back to the <ins> itself
+function findZeroSizeWarning(el: HTMLElement): string | null {
+  let parent = el.parentNode as HTMLElement | null
+  while (parent) {
+    const tagName = parent.rawTagName?.toUpperCase()
+    if (!tagName || tagName === 'BODY' || tagName === 'HTML') break
+    const info = getZeroSizeInfo(parent)
+    if (info) {
+      return `Parent container <${parent.rawTagName.toLowerCase()}> has ${info}; the ad may not render.`
+    }
+    parent = parent.parentNode as HTMLElement | null
+  }
+
+  const selfInfo = getZeroSizeInfo(el)
+  if (selfInfo) {
+    return `The <ins> ad unit itself has ${selfInfo}; the ad may not render.`
+  }
+
+  return null
 }
 
 export async function checkWebsiteAdSense(
@@ -102,25 +152,45 @@ export async function checkWebsiteAdSense(
     // AdSense Script Detection (adsbygoogle.js?client=...)
     const currentAdsbygoogleScriptFound = REGEX.adsScript.test(html)
 
-    // Push Script Detection
-    const currentPushScriptFound = REGEX.pushScript.test(html)
+    // Push Script Detection (must be located inside <body>)
+    const pushScriptMatches: RegExpExecArray[] = []
+    const pushRegex = new RegExp(REGEX.pushScript.source, 'gi')
+    let pushMatch
+    while ((pushMatch = pushRegex.exec(html)) !== null) {
+      pushScriptMatches.push(pushMatch)
+      if (pushMatch.index === pushRegex.lastIndex) pushRegex.lastIndex++
+    }
+    const currentPushScriptFound = pushScriptMatches.length > 0
 
-    const htmlAdUnits: HtmlAdUnitDetail[] = []
-    let match
-    while ((match = REGEX.insTag.exec(html)) !== null) {
-      let fullTagPreview = match[0]
+    const bodyOpenMatch = html.match(/<body[^>]*>/i)
+    const bodyCloseMatch = html.match(/<\/body\s*>/i)
+    let currentPushScriptInBody = false
+    if (currentPushScriptFound && bodyOpenMatch && bodyCloseMatch) {
+      const bodyStart = bodyOpenMatch.index! + bodyOpenMatch[0].length
+      const bodyEnd = bodyCloseMatch.index!
+      currentPushScriptInBody = pushScriptMatches.every(
+        (m) => m.index >= bodyStart && m.index <= bodyEnd
+      )
+    }
+
+    // HTML Ad Unit Detection (ins.adsbygoogle) via DOM parsing
+    const root = parse(html)
+    const insNodes = root.querySelectorAll('ins.adsbygoogle')
+    const htmlAdUnits: HtmlAdUnitDetail[] = insNodes.map((ins) => {
+      let fullTagPreview = `<${ins.rawTagName}${ins.rawAttrs ? ' ' + ins.rawAttrs : ''}>`
       // Tag preview format
       fullTagPreview = fullTagPreview.replace(
         /^<ins\s+class="adsbygoogle"/i,
         '<ins class="adsbygoogle"\n'
       )
       fullTagPreview = fullTagPreview.replace(/\s+([a-zA-Z\-]+)=/g, '\n    $1=')
-      htmlAdUnits.push({
-        client: fullTagPreview.match(/data-ad-client="([^"]*)"/i)?.[1],
-        slot: fullTagPreview.match(/data-ad-slot="([^"]*)"/i)?.[1],
-        fullTagPreview
-      })
-    }
+      return {
+        client: ins.attributes['data-ad-client'],
+        slot: ins.attributes['data-ad-slot'],
+        fullTagPreview,
+        containerWarning: findZeroSizeWarning(ins) ?? undefined
+      }
+    })
 
     // ads.txt Detection
     let currentAdsTxtFound = false
@@ -200,6 +270,7 @@ export async function checkWebsiteAdSense(
       adsTxtContent: currentAdsTxtContent,
       adsbygoogleScriptFound: currentAdsbygoogleScriptFound,
       pushScriptFound: currentPushScriptFound,
+      pushScriptInBody: currentPushScriptInBody,
       ampAdScriptFound: currentAmpAdScriptFound,
       htmlAdUnits: htmlAdUnits,
       ampAdUnits: currentAmpAdUnits

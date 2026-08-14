@@ -2,6 +2,7 @@ export interface HtmlAdUnitDetail {
   client?: string
   slot?: string
   fullTagPreview: string
+  containerWarning?: string
 }
 
 export interface AmpAdUnitDetail {
@@ -22,6 +23,7 @@ export interface CheckResult {
   adsTxtContent?: string | null
   adsbygoogleScriptFound: boolean
   pushScriptFound: boolean
+  pushScriptInBody: boolean
   ampAdScriptFound: boolean
   htmlAdUnits: HtmlAdUnitDetail[]
   ampAdUnits: AmpAdUnitDetail[]

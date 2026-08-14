@@ -1,10 +1,12 @@
 import { HtmlAdUnitDetail } from '@/types/result'
+import { AlertTriangle } from 'lucide-react'
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger
 } from './ui/accordion'
+import { Alert, AlertDescription } from './ui/alert'
 
 interface HtmlAdUnitItemProps {
   unit: HtmlAdUnitDetail
@@ -42,6 +44,17 @@ export default function HtmlAdUnitItem({ unit, index }: HtmlAdUnitItemProps) {
             </span>
           )}
         </p>
+        {unit.containerWarning && (
+          <Alert
+            variant="default"
+            className="mt-2 border-amber-200 bg-amber-50 p-2 text-xs text-amber-700 shadow-sm dark:border-amber-700 dark:bg-amber-900/30 dark:text-amber-400"
+          >
+            <AlertTriangle className="h-4 w-4 flex-shrink-0 text-amber-500 dark:text-amber-400" />
+            <AlertDescription className="ml-1">
+              {unit.containerWarning}
+            </AlertDescription>
+          </Alert>
+        )}
         <Accordion type="single" collapsible className="mt-1 w-full">
           <AccordionItem
             value={`ad-unit-${index}-preview`}
