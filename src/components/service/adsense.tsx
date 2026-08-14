@@ -1,4 +1,6 @@
-export default async function Adsense() {
+'use client'
+
+export default function Adsense() {
   return (
     <>
       <div className="mb-8 mt-4 w-full">
