@@ -49,6 +49,11 @@ export default function RootLayout({
           src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1891811866184778"
           crossOrigin="anonymous"
         ></script>
+        <script
+          defer
+          src="https://analytics.itea.dev/tracker.min.js"
+          data-website-id="adsense"
+        ></script>
       </head>
       <body className="font-body flex min-h-screen flex-col bg-muted/40 text-foreground antialiased">
         <Header />
