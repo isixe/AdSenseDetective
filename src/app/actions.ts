@@ -1,7 +1,7 @@
 'use server'
 
-import { HTMLElement, parse } from 'node-html-parser'
 import { AmpAdUnitDetail, CheckResult, HtmlAdUnitDetail } from '@/types/result'
+import { HTMLElement, parse } from 'node-html-parser'
 
 const initialServerLogicState: CheckResult = {
   urlChecked: '',
@@ -40,13 +40,17 @@ const ZERO_SIZE_PATTERN =
   /^0(?:\.0+)?(?:px|em|rem|%|vh|vw|vmin|vmax|pt|pc|mm|cm|in|ex|ch|q)?$/i
 
 // Detects explicit zero width/height (inline style wins over attributes)
-function getZeroSizeInfo(el: HTMLElement): string | null {  const style = el.attributes['style']
+function getZeroSizeInfo(el: HTMLElement): string | null {
+  const style = el.attributes['style']
   if (style) {
     for (const decl of style.split(';')) {
       const colonIndex = decl.indexOf(':')
       if (colonIndex === -1) continue
       const prop = decl.slice(0, colonIndex).trim().toLowerCase()
-      const value = decl.slice(colonIndex + 1).trim().toLowerCase()
+      const value = decl
+        .slice(colonIndex + 1)
+        .trim()
+        .toLowerCase()
       if (
         (prop === 'width' || prop === 'height') &&
         ZERO_SIZE_PATTERN.test(value)
