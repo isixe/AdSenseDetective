@@ -34,7 +34,6 @@ AdSense Detective helps you quickly audit any website to verify AdSense integrat
 
 2. **Check Website:**  
    The tool inspects the website for:
-
    - AdSense ownership verification tags.
    - Presence of `ads.txt` files.
    - Google AdSense core scripts.
